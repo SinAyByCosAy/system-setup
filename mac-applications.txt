@@ -11,3 +11,4 @@ visual-studio-code
 keka
 hammerspoon
 mysqlworkbench
+superwhisper

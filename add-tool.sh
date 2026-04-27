@@ -9,6 +9,7 @@ MAC_FORMULA=false
 MAC_APP=false
 LINUX=false
 LINUX_NAME=""
+IS_NPM=false
 
 usage(){
     echo "Usage:"
@@ -25,6 +26,7 @@ shift
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
+    --npm) IS_NPM=true ;;
     --common) COMMON=true ;;
     --mac-formula) MAC_FORMULA=true ;;
     --mac-app) MAC_APP=true ;;
@@ -37,6 +39,14 @@ while [[ $# -gt 0 ]]; do
   esac
   shift
 done
+
+# NPM flag can't be passed with any other flag
+if $IS_NPM; then
+    if $COMMON || $MAC_FORMULA || $MAC_APP || $LINUX; then
+        echo "[ERROR] --npm cannot be combined with OS flags"
+        exit 1
+    fi
+fi
 
 # Default linux name = same as tool
 if [ -z "$LINUX_NAME" ]; then
@@ -59,6 +69,9 @@ add_unique() {
 }
 
 # Logic
+if $IS_NPM; then
+    add_unique "$SCRIPT_DIR/npm-global.txt" "$TOOL"
+fi
 if $COMMON; then
     add_unique "$SCRIPT_DIR/common/common-tools.txt" "$TOOL"
 fi

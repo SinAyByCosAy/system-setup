@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 TOOL=""
 COMMON=false
 MAC_FORMULA=false
@@ -40,33 +42,3 @@ done
 if [ -z "$LINUX_NAME" ]; then
     LINUX_NAME="$TOOL"
 fi
-
-add_unique() {
-    FILE="$1"
-    VALUE="$2"
-    
-    mkdir -p "$(dirname "$FILE")"
-    touch "$FILE"
-
-    if ! grep -qxF "$VALUE" "$FILE"; then
-        echo "$VALUE" >> "$FILE"
-        echo "[INFO] Added '$VALUE' to $FILE"
-    else
-        echo "[INFO] '$VALUE' already exists in $FILE"
-    fi
-}
-
-# Logic
-if $COMMON; then
-    add_unique "common/common-tools.txt" "$TOOL"
-fi
-if $MAC_FORMULA; then
-    add_unique "mac/mac-formula.txt" "$TOOL"
-fi
-if $MAC_APP; then
-    add_unique "mac/mac-applications.txt" "$TOOL"
-fi
-if $LINUX; then
-    add_unique "linux/linux-packages.txt" "$LINUX_NAME"
-fi
-

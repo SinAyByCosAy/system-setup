@@ -71,3 +71,23 @@ fi
 if $LINUX; then
     add_unique "$SCRIPT_DIR/linux/linux-packages.txt" "$LINUX_NAME"
 fi
+
+# Git auto-commit + push
+if command -v git &> /dev/null; then
+    git add .
+
+    # commit only if there are changes
+    if ! git diff --cached --quiet; then
+        git commit -m "Add tool: $TOOL"
+        
+        # push (only if branch has upstream)
+        CURRENT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+        if git rev-parse --abbrev-ref --symbolic-full-name "@{u}" &>/dev/null; then
+            git push
+        else
+            git push -u origin "$CURRENT_BRANCH"
+        fi
+    else
+        echo "[INFO] No changes to commit"
+    fi
+fi

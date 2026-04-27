@@ -89,9 +89,15 @@ fi
 if command -v git &> /dev/null; then
     git add .
 
+    if $IS_NPM; then
+        COMMIT_MSG="Add npm tool: $TOOL"
+    else
+        COMMIT_MSG="Add tool: $TOOL"
+    fi
+
     # commit only if there are changes
     if ! git diff --cached --quiet; then
-        git commit -m "Add tool: $TOOL"
+        git commit -m "$COMMIT_MSG"
         
         # push (only if branch has upstream)
         CURRENT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"

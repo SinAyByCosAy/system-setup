@@ -4,8 +4,5 @@ brew-add() {
 
     brew install "$tool" || return 1
 
-    # pass flags, if provided
-    if [ "$#" -gt 0 ]; then
-        add-tool.sh "$tool" "$@"
-    fi
+    [ "$#" -gt 0 ] && add-tool.sh "$tool" "$@"
 }

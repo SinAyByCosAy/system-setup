@@ -16,14 +16,19 @@ echo 'export PATH=/opt/homebrew/bin:$PATH' >> "$SHELL_RC"
 source "$SHELL_RC"
 
 # Install common CLI tools
-while read -r tool; do
-    brew install "$tool"
-done < common/common-tools.txt
+if [ -f common/common-cli.txt ]; then
+    xargs brew install < common/common-cli.txt
+fi
+
+# Install common GUI apps
+if [ -f common/common-gui.txt]; then
+    xargs brew install --cask < common/common-gui.txt
+fi
 
 # Install mac-only CLI tools
 if [ -f mac/mac-formulas.txt ]; then
     xargs brew install < mac/mac-formulas.txt
 fi
 
-# Install GUI apps
+# Install mac-only GUI apps
 xargs -P 4 brew install --cask < mac/mac-applications.txt

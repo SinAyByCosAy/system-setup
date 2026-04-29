@@ -79,18 +79,12 @@ add_unique() {
 if $IS_NPM; then
     add_unique "$SCRIPT_DIR/../npm-global.txt" "$TOOL"
 else
-if $COMMON; then
-    add_unique "$SCRIPT_DIR/common/common-tools.txt" "$TOOL"
-fi
-if $MAC_FORMULA; then
-    add_unique "$SCRIPT_DIR/mac/mac-formula.txt" "$TOOL"
-fi
-if $MAC_APP; then
-    add_unique "$SCRIPT_DIR/mac/mac-applications.txt" "$TOOL"
-fi
-if $LINUX; then
-    add_unique "$SCRIPT_DIR/linux/linux-packages.txt" "$LINUX_NAME"
-fi
+    # --- common ---
+    if $IS_COMMON; then
+        if $IS_GUI; then
+            add_unique "$SCRIPT_DIR/../common/common-gui.txt" "$TOOL"
+        else
+            add_unique "$SCRIPT_DIR/../common/common-cli.txt" "$TOOL"
 
 # Git auto-commit + push
 if command -v git &> /dev/null; then

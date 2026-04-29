@@ -101,7 +101,7 @@ else
         fi
 
         # linux side
-        add_unique "$SCRIPT_DIR/../linux/linux-packages.txt" "$TOOL"
+        add_unique "$SCRIPT_DIR/../linux/linux-packages.txt" "$LINUX_NAME"
     fi
 fi
 

@@ -26,9 +26,12 @@ chmod +x "$REPO_DIR/common/add-tool.sh"
 SHELL_RC="$HOME/.zshrc"
 [[ "$SHELL" == *"bash"* ]] && SHELL_RC="$HOME/.bashrc"
 
-PATH_LINE='export PATH="$HOME/system-setup/common:$PATH"'
+# Creating symlink to access add-tool globally
+SYMLINK_PATH="/usr/local/bin/add-tool"
+TARGET_PATH="$REPO_DIR/common/add-tool.sh"
 
-grep -qxF "$PATH_LINE" "$SHELL_RC" || echo "$PATH_LINE" >> "$SHELL_RC"
+sudo ln -sf "$TARGET_PATH" "$SYMLINK_PATH"
+echo "[INFO] Symlink ensured: add-tool"
 
 # Source shell functions
 BLOCK_START="# >>> setup-tools >>>"

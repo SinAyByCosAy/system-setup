@@ -3,6 +3,5 @@ brew-add() {
     shift
 
     brew install "$tool" || return 1
-
-    [ "$#" -gt 0 ] && add-tool.sh "$tool" "$@"
+    add-tool.sh "$tool" "$@"
 }

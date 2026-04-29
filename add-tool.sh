@@ -85,6 +85,20 @@ else
             add_unique "$SCRIPT_DIR/../common/common-gui.txt" "$TOOL"
         else
             add_unique "$SCRIPT_DIR/../common/common-cli.txt" "$TOOL"
+        fi
+
+    # --- local ---
+    elif $IS_LOCAL; then
+        OS="$(uname)"
+        if [[ "$OS" == "Darwin" ]]; then
+            if $IS_GUI; then
+                add_unique "$SCRIPT_DIR/../mac/mac-applications.txt" "$TOOL"
+            else
+                add_unique "$SCRIPT_DIR/../mac/mac-formulas.txt" "$TOOL"
+            fi
+        else
+            add_unique "$SCRIPT_DIR/../linux/linux-packages.txt" "$TOOL"
+        fi
 
 # Git auto-commit + push
 if command -v git &> /dev/null; then

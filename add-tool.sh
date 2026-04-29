@@ -14,6 +14,7 @@ IS_GUI=false
 IS_NPM=false
 IS_LOCAL=false
 LINUX_NAME=""
+NO_PUSH=false
 
 usage(){
     echo "Usage:"
@@ -33,6 +34,7 @@ while [[ $# -gt 0 ]]; do
     --common) IS_COMMON=true ;;
     --gui) IS_GUI=true ;;
     --local) IS_LOCAL=true ;;
+    --no-push) NO_PUSH=true ;;
     --linux-name)
       shift
       LINUX_NAME="$1"
@@ -119,11 +121,15 @@ if command -v git &> /dev/null; then
         git commit -m "$COMMIT_MSG"
         
         # push (only if branch has upstream)
-        CURRENT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
-        if git rev-parse --abbrev-ref --symbolic-full-name "@{u}" &>/dev/null; then
-            git push
+        if ! $NO_PUSH; then
+            CURRENT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+            if git rev-parse --abbrev-ref --symbolic-full-name "@{u}" &>/dev/null; then
+                git push
+            else
+                git push -u origin "$CURRENT_BRANCH"
+            fi
         else
-            git push -u origin "$CURRENT_BRANCH"
+            echo "[INFO] Skipping git push (--no-push)"
         fi
     else
         echo "[INFO] No changes to commit"

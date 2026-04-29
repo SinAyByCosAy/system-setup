@@ -4,9 +4,14 @@ set -e
 sudo apt update
 
 # Install common CLI tools
-while read -r tool; do
-    sudo apt install -y "$tool" ;;
-done < common/common-tools.txt
+if [ -f common/common-cli.txt ]; then
+    xargs -a common/common-cli.txt sudo apt install -y
+fi
+
+# Install common GUI apps
+if [ -f common/common-gui.txt ]; then
+    xargs -a common/common-gui.txt sudo apt install -y
+fi
 
 # Install packages specifically for linux environment
 if [ -f linux/linux-packages.txt ]; then

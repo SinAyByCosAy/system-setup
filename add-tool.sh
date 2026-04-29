@@ -99,6 +99,20 @@ else
         else
             add_unique "$SCRIPT_DIR/../linux/linux-packages.txt" "$TOOL"
         fi
+    
+    # --- cross OS via linux-name ---
+    elif [ -n "$LINUX_NAME" ]; then
+        # mac side
+        if $IS_GUI; then
+            add_unique "$SCRIPT_DIR/../mac/mac-applications.txt" "$TOOL"
+        else
+            add_unique "$SCRIPT_DIR/../mac/mac-formulas.txt" "$TOOL"
+        fi
+
+        # linux side
+        add_unique "$SCRIPT_DIR/../linux/linux-packages.txt" "$TOOL"
+    fi
+fi
 
 # Git auto-commit + push
 if command -v git &> /dev/null; then

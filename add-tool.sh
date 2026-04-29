@@ -59,9 +59,10 @@ if $IS_COMMON && [ -n "$LINUX_NAME" ]; then
     exit 1
 fi
 
+# Helper
 add_unique() {
-    FILE="$1"
-    VALUE="$2"
+    local FILE="$1"
+    local VALUE="$2"
     
     mkdir -p "$(dirname "$FILE")"
     touch "$FILE"

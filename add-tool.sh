@@ -3,6 +3,8 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+source "$SCRIPT_DIR/validations.sh"
+
 TOOL="$1"
 shift || true
 
@@ -21,6 +23,8 @@ usage(){
 
 # Run usage, is no tool present
 [ -z "$TOOL" ] && usage
+
+ORIGINAL_ARGS=("$@")
 
 # Parse flags
 while [[ $# -gt 0 ]]; do
@@ -43,21 +47,8 @@ if ! $IS_COMMON && ! $IS_LOCAL && ! $IS_NPM && [ -z "$LINUX_NAME" ]; then
     exit 0
 fi
 
-# Validation
-if $IS_NPM && ($IS_COMMON || $IS_LOCAL || $IS_GUI || [ -n "$LINUX_NAME" ]); then
-    echo "[ERROR] --npm cannot be combined with other flags"
-    exit 1
-fi
-
-if $IS_COMMON && $IS_LOCAL; then
-    echo "[ERROR] --common and --local cannot be combined"
-    exit 1
-fi
-
-if $IS_COMMON && [ -n "$LINUX_NAME" ]; then
-    echo "[ERROR] --common cannot be combined with --linux-name"
-    exit 1
-fi
+# Flags validation
+validate_flags "${ORIGINAL_ARGS[@]}" || exit 1
 
 # Helper
 add_unique() {

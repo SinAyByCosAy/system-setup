@@ -75,10 +75,10 @@ add_unique() {
     fi
 }
 
-# Logic
+# --- npm ---
 if $IS_NPM; then
-    add_unique "$SCRIPT_DIR/npm-global.txt" "$TOOL"
-fi
+    add_unique "$SCRIPT_DIR/../npm-global.txt" "$TOOL"
+else
 if $COMMON; then
     add_unique "$SCRIPT_DIR/common/common-tools.txt" "$TOOL"
 fi

@@ -19,3 +19,10 @@ apt-add() {
     sudo apt install -y "$tool" || return 1
     add-tool.sh "$tool" "$@"
 }
+npm-add() {
+    local tool="$1"
+    shift
+
+    npm install -g "$tool" || return 1
+    add-tool.sh "$tool" --npm
+}

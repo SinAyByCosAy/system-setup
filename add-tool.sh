@@ -3,54 +3,60 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-TOOL=""
-COMMON=false
-MAC_FORMULA=false
-MAC_APP=false
-LINUX=false
-LINUX_NAME=""
+TOOL="$1"
+shift || true
+
+# Flags
+IS_COMMON=false
+IS_GUI=false
 IS_NPM=false
+IS_LOCAL=false
+LINUX_NAME=""
 
 usage(){
     echo "Usage:"
-    echo "./add-tool.sh <tool> [--common] [--mac-formula] [--mac-app] [--linux] [--linux-name <name>]"
+    echo "./add-tool.sh <tool> [--common] [--local] [--gui] [--npm] [--linux-name <name>]"
     exit 1
 }
 
-if [ $# -lt 1 ]; then
-    usage
-fi
+# Run usage, is no tool present
+[ -z "$TOOL" ] && usage
 
-TOOL="$1"
-shift
-
+# Parse flags
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --npm) IS_NPM=true ;;
-    --common) COMMON=true ;;
-    --mac-formula) MAC_FORMULA=true ;;
-    --mac-app) MAC_APP=true ;;
-    --linux) LINUX=true ;;
+    --common) IS_COMMON=true ;;
+    --gui) IS_GUI=true ;;
+    --local) IS_LOCAL=true ;;
     --linux-name)
       shift
       LINUX_NAME="$1"
       ;;
-    *) echo "Unknown flag: $1"; usage ;;
+    *) echo "[Error] Unknown flag: $1"; exit 1 ;;
   esac
   shift
 done
 
-# NPM flag can't be passed with any other flag
-if $IS_NPM; then
-    if $COMMON || $MAC_FORMULA || $MAC_APP || $LINUX; then
-        echo "[ERROR] --npm cannot be combined with OS flags"
-        exit 1
-    fi
+# No flags -> do nothing (user doesn't want to write to any file)
+if ! $IS_COMMON && ! $IS_LOCAL && ! $IS_NPM && [ -z "$LINUX_NAME" ]; then
+    exit 0
 fi
 
-# Default linux name = same as tool
-if [ -z "$LINUX_NAME" ]; then
-    LINUX_NAME="$TOOL"
+# Validation
+if $IS_NPM && ($IS_COMMON || $IS_LOCAL || $IS_GUI || [ -n "$LINUX_NAME" ]); then
+    echo "[ERROR] --npm cannot be combined with other flags"
+    exit 1
+fi
+
+if $IS_COMMON && $IS_LOCAL; then
+    echo "[ERROR] --common and --local cannot be combined"
+    exit 1
+fi
+
+if $IS_COMMON && [ -n "$LINUX_NAME" ]; then
+    echo "[ERROR] --common cannot be combined with --linux-name"
+    exit 1
 fi
 
 add_unique() {

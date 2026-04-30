@@ -6,6 +6,18 @@ if ! command -v brew &> /dev/null; then
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
+# Ensure brew is available in this script
+eval "$(/opt/homebrew/bin/brew shellenv)"
+# Persist brew for future shells
+ZPROFILE="$HOME/.zprofile"
+
+if ! grep -q 'brew shellenv' "$ZPROFILE" 2>/dev/null; then
+    echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> "$ZPROFILE"
+    echo "[INFO] Added brew shellenv to ~/.zprofile"
+fi
+
+brew update
+
 # Install common CLI tools
 if [ -f common/common-cli.txt ]; then
     xargs brew install < common/common-cli.txt

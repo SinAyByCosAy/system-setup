@@ -1,19 +1,10 @@
 #!/usr/bin/env bash
 set -e
 
-SHELL_RC="$HOME/.zshrc"
-[[ "$SHELL" == *"bash"* ]] && SHELL_RC = "$HOME/.bashrc"
-
 # Install homebrew if not present
 if ! command -v brew &> /dev/null; then
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
-
-# Ensure brew in path(idempotent)
-grep -qxF 'export PATH=/opt/homebrew/bin:$PATH' "$SHELL_RC" || \
-echo 'export PATH=/opt/homebrew/bin:$PATH' >> "$SHELL_RC"
-
-source "$SHELL_RC"
 
 # Install common CLI tools
 if [ -f common/common-cli.txt ]; then
@@ -21,7 +12,7 @@ if [ -f common/common-cli.txt ]; then
 fi
 
 # Install common GUI apps
-if [ -f common/common-gui.txt]; then
+if [ -f common/common-gui.txt ]; then
     xargs brew install --cask < common/common-gui.txt
 fi
 

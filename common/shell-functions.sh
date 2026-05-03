@@ -29,6 +29,7 @@ apt-add() {
     add-tool.sh "$tool" "$@"
 }
 npm-add() {
+    echo "$SCRIPT_DIR/validations.sh"
     local tool="$1"
     shift
 

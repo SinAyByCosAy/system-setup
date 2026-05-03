@@ -5,6 +5,8 @@ validate_flags() {
     local has_npm=false
     local has_linux_name=false
 
+    echo "Validating flags"
+
     while [[ $# -gt 0 ]]; do
         case "$1" in
           --common) has_common=true ;;

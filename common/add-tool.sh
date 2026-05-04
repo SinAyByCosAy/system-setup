@@ -148,7 +148,7 @@ if command -v git &> /dev/null; then
 
         git -C "$REPO_DIR" commit -m "$COMMIT_MSG"
 
-        if ! $NO_PUSH; then
+        if $AUTO_PUSH && ! $NO_PUSH; then
             CURRENT_BRANCH="$(git -C "$REPO_DIR" rev-parse --abbrev-ref HEAD)"
 
             if git -C "$REPO_DIR" rev-parse --abbrev-ref --symbolic-full-name "@{u}" &>/dev/null; then

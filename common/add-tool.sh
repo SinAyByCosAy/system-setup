@@ -13,6 +13,17 @@ source "$SCRIPT_DIR/validations.sh"
 
 REPO_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
+CONFIG_FILE="$HOME/.setup-config"
+
+# create setup-config with defaults, if missing
+if [ ! -f "$CONFIG_FILE" ]; then
+    echo "AUTO_PUSH=true" > "$CONFIG_FILE"
+    echo "[INFO] Created default config at $CONFIG_FILE"
+fi
+
+# load config
+source "$CONFIG_FILE"
+
 TOOL="$1"
 shift || true
 

@@ -11,6 +11,8 @@ SCRIPT_DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
 
 source "$SCRIPT_DIR/validations.sh"
 
+REPO_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+
 TOOL="$1"
 shift || true
 
@@ -66,6 +68,9 @@ add_unique() {
     mkdir -p "$(dirname "$FILE")"
     touch "$FILE"
 
+    # ensure file ends with newline
+    [ -s "$FILE" ] && [ -n "$(tail -c1 "$FILE")" ] && echo >> "$FILE"
+
     if ! grep -qxF "$VALUE" "$FILE"; then
         echo "$VALUE" >> "$FILE"
         echo "[INFO] Added '$VALUE' to $FILE"
@@ -115,7 +120,7 @@ fi
 
 # Git auto-commit + push
 if command -v git &> /dev/null; then
-    git add .
+    git -C "$REPO_DIR" add .
 
     # commit only if there are changes
     if ! git diff --cached --quiet; then
@@ -124,15 +129,15 @@ if command -v git &> /dev/null; then
         else
             COMMIT_MSG="Add tool: $TOOL"
         fi
-        git commit -m "$COMMIT_MSG"
+        git -C "$REPO_DIR" commit -m "$COMMIT_MSG"
         
         # push (only if branch has upstream)
         if ! $NO_PUSH; then
             CURRENT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
-            if git rev-parse --abbrev-ref --symbolic-full-name "@{u}" &>/dev/null; then
-                git push
+            if git -C "$REPO_DIR" rev-parse --abbrev-ref --symbolic-full-name "@{u}" &>/dev/null; then
+                git -C "$REPO_DIR" push
             else
-                git push -u origin "$CURRENT_BRANCH"
+                git -C "$REPO_DIR" push -u origin "$CURRENT_BRANCH"
             fi
         else
             echo "[INFO] Skipping git push (--no-push)"

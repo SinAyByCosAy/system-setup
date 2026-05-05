@@ -22,11 +22,15 @@ source "$REPO_DIR/common/nvm.sh"
 bash "$REPO_DIR/common/npm.sh"
 
 # Creating symlink to access add-tool globally
-SYMLINK_PATH="/usr/local/bin/add-tool"
-TARGET_PATH="$REPO_DIR/common/add-tool.sh"
+SYMLINK_PATH_ADD="/usr/local/bin/add-tool"
+TARGET_PATH_ADD="$REPO_DIR/common/add-tool.sh"
 
-sudo ln -sf "$TARGET_PATH" "$SYMLINK_PATH"
-echo "[INFO] Symlink ensured: add-tool"
+SYMLINK_PATH_REMOVE="/usr/local/bin/remove-tool"
+TARGET_PATH_REMOVE="$REPO_DIR/common/remove-tool.sh"
+
+sudo ln -sf "$TARGET_PATH_ADD" "$SYMLINK_PATH_ADD"
+sudo ln -sf "$TARGET_PATH_REMOVE" "$SYMLINK_PATH_REMOVE"
+echo "[INFO] Symlink ensured: add-tool, remove-tool"
 
 # Inject shell functions
 SHELL_RC="$HOME/.zshrc"

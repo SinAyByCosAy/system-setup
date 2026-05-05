@@ -26,6 +26,7 @@ IS_COMMON=false
 IS_LOCAL=false
 NO_PUSH=false
 REMOVED=false
+OS="$(uname)"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -85,7 +86,6 @@ fi
 
 # Local
 if $IS_LOCAL; then
-    OS="$(uname)"
     if [[ "$OS" == "Darwin" ]]; then
         if $IS_GUI; then
             remove_from_file "$REPO_DIR/mac/mac-applications.txt"
@@ -95,4 +95,19 @@ if $IS_LOCAL; then
     else
         remove_from_file "$REPO_DIR/linux/linux-packages.txt"
     fi
+fi
+
+# Uninstall
+if $IS_NPM; then
+    npm uninstall -g "$TOOL" || true
+fi
+
+if [[ "$OS" == "Darwin" ]]; then
+    if $IS_GUI; then
+        brew uninstall --cask "$TOOL" || true
+    else
+        brew uninstall "$TOOL" || true
+    fi
+else
+    sudo apt remove -y "$TOOL" || true
 fi

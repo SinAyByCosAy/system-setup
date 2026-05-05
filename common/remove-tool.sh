@@ -24,6 +24,8 @@ IS_NPM=false
 IS_GUI=false
 IS_COMMON=false
 IS_LOCAL=false
+NO_PUSH=false
+REMOVED=false
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -31,6 +33,7 @@ while [[ $# -gt 0 ]]; do
     --gui) IS_GUI=true ;;
     --common) IS_COMMON=true ;;
     --local) IS_LOCAL=true ;;
+    --no-push) NO_PUSH=true ;;
     *) echo "[ERROR] Unknown flag: $1"; exit 1 ;;
   esac
   shift
@@ -48,7 +51,7 @@ if $IS_COMMON && $IS_LOCAL; then
 fi
 
 # If no flags -> remove everywhere
-if ! $IS_NPM && ! $IS_GUI && ! $IS_COMMON && ! IS_LOCAL; then
+if ! $IS_NPM && ! $IS_GUI && ! $IS_COMMON && ! $IS_LOCAL; then
     IS_NPM=true
     IS_GUI=true
     IS_COMMON=true
@@ -62,7 +65,34 @@ remove_from_file() {
     if grep -qxF "$TOOL" "$FILE"; then
         grep -vxF "$TOOL" "$FILE" > "$FILE.tmp" && mv "$FILE.tmp" "$FILE"
         echo "[INFO] Removed '$TOOL' from $FILE"
+        REMOVED=true
     else
         echo "[INFO] '$TOOL' not found in $FILE"
     fi
 }
+
+# Select the file to remove from
+$IS_NPM && remove_from_file "$REPO_DIR/npm-global.txt"
+
+# Common
+if $IS_COMMON; then
+    if $IS_GUI; then
+        remove_from_file "$REPO_DIR/common/common-gui.txt"
+    else
+        remove_from_file "$REPO_DIR/common/common-cli.txt"
+    fi
+fi
+
+# Local
+if $IS_LOCAL; then
+    OS="$(uname)"
+    if [[ "$OS" == "Darwin" ]]; then
+        if $IS_GUI; then
+            remove_from_file "$REPO_DIR/mac/mac-applications.txt"
+        else
+            remove_from_file "$REPO_DIR/mac/mac-formulas.txt"
+        fi
+    else
+        remove_from_file "$REPO_DIR/linux/linux-packages.txt"
+    fi
+fi

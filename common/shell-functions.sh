@@ -38,6 +38,9 @@ npm-add() {
     npm install -g "$tool" || return 1
     add-tool "$tool" --npm
 }
+tool-rm() {
+    remove-tool "$@"
+}
 setup-config() {
     cat "$HOME/.setup-config"
 }

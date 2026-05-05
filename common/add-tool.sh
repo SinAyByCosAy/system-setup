@@ -129,6 +129,12 @@ else
     fi
 fi
 
+if ! REMOVED; then
+    echo "[INFO] '$TOOL' not found in any tracked lists"
+    echo "[HINT] If this is a cross-OS tool, try the OS-specific name (e.g., docker.io)"
+
+fi
+
 # Git auto-commit + push
 if command -v git &> /dev/null && [ -d "$REPO_DIR/.git" ]; then
 

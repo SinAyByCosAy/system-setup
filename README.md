@@ -13,5 +13,5 @@ cd ~/OmniSetup
 chmod +x bootstrap.sh
 ./bootstrap.sh
 source ~/.zshrc
-
+```
 

@@ -7,12 +7,11 @@ This tool is built for developers who want a reproducible environment without th
 
 ## 🚀 First-Time Setup
 To set up a fresh machine, clone the repository and run the bootstrap script.
-```console
+```bash
 git clone https://github.com/SinAyByCosAy/OmniSetup.git ~/OmniSetup
 cd ~/OmniSetup
 chmod +x bootstrap.sh
 ./bootstrap.sh
 source ~/.zshrc
-```
 
 

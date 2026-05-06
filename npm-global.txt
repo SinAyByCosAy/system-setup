@@ -1,3 +1,2 @@
 express
-smallest
 axios

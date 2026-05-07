@@ -163,8 +163,11 @@ setup-push-off  # Disables the auto-push behavior
 *(Tip: You can always override your global auto-push setting for a single command by passing the `--no-push` flag, e.g., `brew-add nmap --common --no-push`).*
 
 ## 🔧 Troubleshooting & Edge Cases
-- Repo Moved: If you move the cloned repository to a new directory, your global symlinks will break[cite: 1]. Update them manually by running:
-sudo ln -sf "<new-path>/common/add-tool.sh" /usr/local/bin/add-tool
+- Repo Moved: If you move the cloned repository to a new directory, your global symlinks will break. 
+<br>Update them manually by running:
+```bash
+sudo ln -sf "<new-path>/common/add-tool.sh" /usr/local/bin/add-tool<br>
 sudo ln -sf "<new-path>/common/remove-tool.sh" /usr/local/bin/remove-tool
+```
 - Git Commit Errors: Ensure your git user is configured (git config --global user.name "...")[cite: 1]. The tool will gracefully skip commits if git is not authenticated.
 - Command Not Found: If wrappers like brew-add aren't recognized, run source ~/.zshrc (or .bashrc) to reload your injected shell functions[cite: 1].

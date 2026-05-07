@@ -5,7 +5,7 @@ OmniSetup is a lightweight, cross-platform (macOS and Linux) utility designed to
 ## 🎯 Who is it for?
 This tool is built for developers who want a reproducible environment without the overhead of heavy infrastructure tools like Ansible or Nix. It replaces manual installation steps with a streamlined, self-documenting workflow.
 
-## 🧠 What This Does
+## 🧠 What this does?
 
 - Install tools/apps on a fresh machine(based on OS)
 - Track your setup in version-controlled files
@@ -85,3 +85,31 @@ brew-add jq --common
 
 # Cross-OS GUI application
 cask-add google-chrome --common
+```
+
+## ⚙️ Configuration & Git Behavior
+
+OmniSetup automatically commits file changes to your local Git repository when you track or untrack a tool. 
+
+**Auto-Creation & Defaults**
+You do not need to manually create any configuration files. The tool manages its own state at `~/.setup-config`.
+
+> **⚠️ Note: Auto-Push is ENABLED by default.** > Out of the box, OmniSetup will automatically run `git push` to sync your changes to your remote repository (`AUTO_PUSH=true`). 
+
+**Disabling Auto-Push Before First Use**
+If you want to disable automatic pushing *before* you run your very first installation command, you must initialize the config file first. Run these two commands:
+
+```bash
+setup-config    # Initializes the default config file
+setup-push-off  # Disables the auto-push behavior
+```
+
+### Configuration Commands
+
+| Command | Action |
+| :--- | :--- |
+| `setup-config` | Displays your current configuration variables (and initializes `~/.setup-config` if it doesn't exist yet). |
+| `setup-push-off` | Disables automatic Git pushing to the remote repository (`AUTO_PUSH=false`). |
+| `setup-push-on` | Re-enables automatic Git pushing (`AUTO_PUSH=true`). |
+
+*(Tip: You can always override your global auto-push setting for a single command by passing the `--no-push` flag, e.g., `brew-add nmap --common --no-push`).*

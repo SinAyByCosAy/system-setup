@@ -25,7 +25,7 @@ source ~/.zshrc
 
 ### Files being tracked:
 <ul>
-    <li>Common(MacOS and Linux): [npm-global.txt](https://github.com/SinAyByCosAy/OmniSetup/blob/master/npm-global.txt), [common-cli.txt](./common/common-cli.txt)!, [common-gui.txt](./common/common-gui.txt)!</li>
+    <li>Common(MacOS and Linux): <a href="https://github.com/SinAyByCosAy/OmniSetup/blob/master/npm-global.txt">npm-global.txt</a>, [common-cli.txt](./common/common-cli.txt)!, [common-gui.txt](./common/common-gui.txt)!</li>
     <li>Mac Only: [mac-applications.txt](./mac/brew.sh)!, [mac-formulas.txt](./mac/mac-formulas.txt)!</li>
     <li>Linux Only: [linux-packages.txt](./linux/linux-packages.txt)!</li>
 </ul>

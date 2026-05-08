@@ -63,7 +63,8 @@ remove_from_file() {
     [ -f "$FILE" ] || return
     
     if grep -qxF "$TOOL" "$FILE"; then
-        grep -vxF "$TOOL" "$FILE" > "$FILE.tmp" && mv "$FILE.tmp" "$FILE"
+        grep -vxF "$TOOL" "$FILE" > "$FILE.tmp" || true
+        mv "$FILE.tmp" "$FILE"
         echo "[INFO] Removed '$TOOL' from $FILE"
     fi
 }

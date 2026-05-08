@@ -15,17 +15,19 @@ brew-add() {
 
     validate_flags "$@" || return 1
 
-    brew install "$tool" || return 1
+    local IS_GUI=false
+
+    for arg in "$@"; do
+        [[ "$arg" == "--gui" ]] && IS_GUI=true
+    done
+
+    if $IS_GUI; then
+        brew install --cask "$tool" || return 1
+    else
+        brew install "$tool" || return 1
+    fi
+
     add-tool "$tool" "$@"
-}
-cask-add() {
-    local tool="$1"
-    shift
-
-    validate_flags "$@" || return 1
-
-    brew install --cask "$tool" || return 1
-    add-tool "$tool" --gui "$@"
 }
 apt-add() {
     local tool="$1"

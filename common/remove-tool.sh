@@ -25,7 +25,6 @@ IS_GUI=false
 IS_COMMON=false
 IS_LOCAL=false
 NO_PUSH=false
-REMOVED=false
 OS="$(uname)"
 
 while [[ $# -gt 0 ]]; do
@@ -66,7 +65,6 @@ remove_from_file() {
     if grep -qxF "$TOOL" "$FILE"; then
         grep -vxF "$TOOL" "$FILE" > "$FILE.tmp" && mv "$FILE.tmp" "$FILE"
         echo "[INFO] Removed '$TOOL' from $FILE"
-        REMOVED=true
     fi
 }
 
@@ -75,21 +73,15 @@ $IS_NPM && remove_from_file "$REPO_DIR/npm-global.txt"
 
 # Common
 if $IS_COMMON; then
-    if $IS_GUI; then
-        remove_from_file "$REPO_DIR/common/common-gui.txt"
-    else
-        remove_from_file "$REPO_DIR/common/common-cli.txt"
-    fi
+    remove_from_file "$REPO_DIR/common/common-gui.txt"
+    remove_from_file "$REPO_DIR/common/common-cli.txt"
 fi
 
 # Local
 if $IS_LOCAL; then
     if [[ "$OS" == "Darwin" ]]; then
-        if $IS_GUI; then
-            remove_from_file "$REPO_DIR/mac/mac-applications.txt"
-        else
-            remove_from_file "$REPO_DIR/mac/mac-formulas.txt"
-        fi
+        remove_from_file "$REPO_DIR/mac/mac-applications.txt"
+        remove_from_file "$REPO_DIR/mac/mac-formulas.txt"
     else
         remove_from_file "$REPO_DIR/linux/linux-packages.txt"
     fi

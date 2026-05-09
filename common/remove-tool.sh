@@ -81,8 +81,8 @@ fi
 # Local
 if $IS_LOCAL; then
     if [[ "$OS" == "Darwin" ]]; then
-        remove_from_file "$REPO_DIR/mac/mac-applications.txt"
-        remove_from_file "$REPO_DIR/mac/mac-formulas.txt"
+        remove_from_file "$REPO_DIR/mac/mac-gui.txt"
+        remove_from_file "$REPO_DIR/mac/mac-cli.txt"
     else
         remove_from_file "$REPO_DIR/linux/linux-packages.txt"
     fi

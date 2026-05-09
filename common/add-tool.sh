@@ -107,9 +107,9 @@ else
         OS="$(uname)"
         if [[ "$OS" == "Darwin" ]]; then
             if $IS_GUI; then
-                add_unique "$SCRIPT_DIR/../mac/mac-applications.txt" "$TOOL"
+                add_unique "$SCRIPT_DIR/../mac/mac-gui.txt" "$TOOL"
             else
-                add_unique "$SCRIPT_DIR/../mac/mac-formulas.txt" "$TOOL"
+                add_unique "$SCRIPT_DIR/../mac/mac-cli.txt" "$TOOL"
             fi
         else
             add_unique "$SCRIPT_DIR/../linux/linux-packages.txt" "$TOOL"
@@ -119,9 +119,9 @@ else
     elif [ -n "$LINUX_NAME" ]; then
         # mac side
         if $IS_GUI; then
-            add_unique "$SCRIPT_DIR/../mac/mac-applications.txt" "$TOOL"
+            add_unique "$SCRIPT_DIR/../mac/mac-gui.txt" "$TOOL"
         else
-            add_unique "$SCRIPT_DIR/../mac/mac-formulas.txt" "$TOOL"
+            add_unique "$SCRIPT_DIR/../mac/mac-cli.txt" "$TOOL"
         fi
 
         # linux side

@@ -29,9 +29,9 @@ if [ -f common/common-gui.txt ]; then
 fi
 
 # Install mac-only CLI tools
-if [ -f mac/mac-formulas.txt ]; then
-    xargs brew install < mac/mac-formulas.txt
+if [ -f mac/mac-cli.txt ]; then
+    xargs brew install < mac/mac-cli.txt
 fi
 
 # Install mac-only GUI apps
-xargs -P 4 brew install --cask < mac/mac-applications.txt
+xargs -P 4 brew install --cask < mac/mac-gui.txt

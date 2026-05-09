@@ -58,8 +58,7 @@ These commands determine *how* a package is installed or removed on your current
 
 | Command | Action |
 | :--- | :--- |
-| `brew-add <tool>` | Installs a CLI tool via Homebrew (macOS). |
-| `cask-add <tool>` | Installs a GUI application via Homebrew Cask (macOS). |
+| `brew-add <tool>` | Installs a package via Homebrew (macOS). Dynamically uses `--cask` if the `--gui` flag is passed. |
 | `apt-add <tool>` | Installs a package via `apt` (Linux). |
 | `npm-add <tool>` | Installs a Node.js package globally via `npm` (Cross-OS). |
 | `add-tool <tool>` | Tracks a tool that is **already installed** on your system (skips installation). |
@@ -70,11 +69,11 @@ Flags tell OmniSetup *where* to record the tool in your Git repository so it can
 
 | Flag | Description | File Modified |
 | :--- | :--- | :--- |
-| `--common` | Tracks the tool for **both** macOS and Linux. | `common/common-cli.txt`<br>*(or `common-gui.txt`)* |
-| `--local` | Tracks the tool **only** for the current OS. | `mac/mac-cli.txt` <br>*(or `linux/linux-cli.txt`)* |
-| `--gui` | Classifies the tool as a GUI app (often implicit with `cask-add`). | Changes target to `-gui.txt` files. |
+| `--common` | Tracks the tool for **both** macOS and Linux. | `common/common-cli.txt` (or `-gui.txt`) |
+| `--local` | Tracks the tool **only** for the current OS. | `mac/mac-cli.txt` (or `-gui.txt`) |
+| `--gui` | Classifies the tool as a GUI app. On Mac, it forces a Cask install. | Targets `-gui.txt` files. |
 | `--npm` | Tracks as an NPM package. | `npm-global.txt` |
-| `--linux-name <name>` | Maps a different package name for Linux `apt` installs. | Appended inline (e.g., `docker|docker.io`) |
+| `--linux-name <name>` | Maps a different package name for Linux `apt` installs. | Appended inline (e.g., `docker & docker.io`) |
 | `--no-push` | Skips pushing the Git commit to the remote repo. | *None* |
 
 ---
@@ -90,49 +89,65 @@ Use `--common` when you want this tool available on every machine you set up.
 brew-add jq --common
 
 # Cross-OS GUI application
-cask-add google-chrome --common
+brew-add google-chrome --common --gui
 ```
+
 #### Case B: Tracking an OS-Specific Tool
-Use --local when a tool is only relevant to your Mac (like a Mac-specific utility) or your Linux box.
+Use `--local` when a tool is only relevant to your Mac (like a Mac-specific utility) or your Linux box.
 ```bash
 # Installed and tracked ONLY for macOS
-brew-add rectangle --local
+brew-add rectangle --local --gui
 
 # Installed and tracked ONLY for Linux
 apt-add systemd-ui --local
 ```
+
 #### Case C: Handling Different Package Names Across OSs
-Sometimes a package is named differently in brew vs apt. You can install it on Mac while simultaneously defining what the Linux machine should look for.
+Sometimes a package is named differently in `brew` vs `apt`. You can install it on Mac while simultaneously defining what the Linux machine should look for.
 ```bash
 # Installs 'docker' via brew, but tells Linux to use 'docker.io'
 brew-add docker --common --linux-name docker.io
 ```
+
 #### Case D: Global Node/NPM Packages
-NPM packages are inherently cross-platform.
+NPM packages require the explicit `--npm` flag to be saved to state.
 ```bash
 # Installs 'typescript' globally and adds to npm-global.txt
 npm-add typescript --npm
 ```
+
 #### Case E: Temporary Install (No Tracking)
-If you omit tracking flags, the wrapper will simply install the tool using the underlying package manager, but it will not write it to any text file or trigger a git commit.
+If you omit tracking flags, the wrapper will simply install the tool using the underlying package manager, but it will **not** write it to any text file or trigger a git commit.
 ```bash
-# Installs to your system for temporary use, no tracking
+# Installs a CLI tool temporarily
 brew-add nmap
+
+# Installs a GUI tool temporarily (requires --gui for macOS cask logic)
+brew-add spotify --gui
+
+# Installs an NPM package temporarily
+npm-add express
 ```
+
 #### Case F: Retroactive Tracking
-If you installed something manually (e.g., brew install tree) and later decide you want OmniSetup to track it, use add-tool.
+If you installed something manually (e.g., `brew install tree`) and later decide you want OmniSetup to track it, use `add-tool`.
 ```bash
 # Does not attempt to install, just adds to the common tracking list
 add-tool tree --common
 ```
+
 #### Case G: Uninstalling and Untracking
 The removal tool automatically handles the uninstallation and purges the tool from whichever list it was being tracked in.
 ```bash
-# Removes 'express' from the system and npm-global.txt
-tool-rm express
-# Scoped removal (removes only from the specified list)
-tool-rm vlc --gui
+# Removes 'typescript' from the system and npm-global.txt
+tool-rm typescript
 ```
+
+**⚠️ Important Exceptions:**
+1. **Mac GUI Installations:** To install a Mac GUI app without tracking it, you **must** still pass the `--gui` flag (e.g., `brew-add spotify --gui`). This tells the wrapper to use `brew install --cask` instead of regular `brew install`.
+2. **NPM Tracking:** `npm-add` behaves exactly like OS wrappers. Running `npm-add express` will install it globally but *will not track it*. You must pass `--npm` to track it (e.g., `npm-add express --npm`).
+
+---
 
 ## ⚙️ Configuration & Git Behavior
 

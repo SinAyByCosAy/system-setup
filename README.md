@@ -72,7 +72,7 @@ Flags tell OmniSetup *where* to record the tool in your Git repository so it can
 | `--local` | Tracks the tool **only** for the current OS. | `mac/mac-cli.txt` (or `-gui.txt`) |
 | `--gui` | Classifies the tool as a GUI app. On Mac, it forces a Cask install. | Targets `-gui.txt` files. |
 | `--npm` | Tracks as an NPM package. | `npm-global.txt` |
-| `--linux-name <name>` | Maps a different package name for Linux `apt` installs. | Puts linux specific name in `linux-packages.txt` |
+| `--linux-name <name>` | Acts as a cross-OS tracking flag for tools with divergent names. | `mac-cli.txt` (or `-gui.txt`)AND `linux-cli.txt` |
 | `--no-push` | Skips pushing the Git commit to the remote repo. | *None* |
 
 ### 3. Flag Combinations & Clarifications
@@ -82,7 +82,16 @@ Tracking requires **explicit intent**. How you combine flags determines exactly 
 * `--common --gui` ➔ **Common GUI** tracking
 * `--local` (alone) ➔ **Local CLI** tracking
 * `--local --gui` ➔ **Local GUI** tracking
+* `--linux-name` ➔ **2 Names, 2 Files:** Acts as a special cross-OS flag. It tracks the primary name in the Mac list, and the provided Linux name in the Linux list.
 * *(No flags)* ➔ **No tracking** (Installation only)
+
+**🚫 Invalid Combinations (Will throw an error):**
+* `--common`, `--local`, and `--linux-name` are mutually exclusive. A tool is either shared exactly, specific to one OS, or shared with divergent names. You cannot combine these flags.
+* `--npm` + *(any OS-level flag)*: NPM is an independent, cross-platform runtime layer. It cannot mix with OS-level flags like `--gui` or `--local`.
+
+**⚠️ Important Exceptions:**
+1. **Mac GUI Installations:** To install a Mac GUI app without tracking it, you **must** still pass the `--gui` flag (e.g., `omni-add spotify --gui`). This tells the wrapper to use `brew install --cask` instead of regular `brew install`.
+2. **NPM Tracking:** `npm-add` behaves exactly like OS wrappers. Running `npm-add express` will install it globally but *will not track it*. You must pass `--npm` to track it (e.g., `npm-add express --npm`).
 
 ---
 
@@ -111,11 +120,11 @@ omni-add systemd-ui --local
 ```
 
 #### Case C: Handling Different Package Names Across OSs
-Sometimes a package is named differently in `brew` vs `apt`. The `--linux-name` flag bridges this gap by interpreting the intent based on the active OS.
+Sometimes a package is named differently in `brew` vs `apt`. The `--linux-name` flag acts as a standalone cross-OS tracker. It writes the primary name to your Mac list and the divergent name to your Linux list simultaneously.
 ```bash
 # On macOS: Installs 'docker' via brew, records 'docker' for MacOS and 'docker.io' for Linux tracking.
 # On Linux: Reads the flag and installs 'docker.io' via apt.
-omni-add docker --common --linux-name docker.io
+omni-add docker --linux-name docker.io
 ```
 
 #### Case D: Global Node/NPM Packages
@@ -158,9 +167,19 @@ tool-rm typescript --npm
 tool-rm vlc --gui
 ```
 
-**⚠️ Important Exceptions:**
-1. **Mac GUI Installations:** To install a Mac GUI app without tracking it, you **must** still pass the `--gui` flag (e.g., `brew-add spotify --gui`). This tells the wrapper to use `brew install --cask` instead of regular `brew install`.
-2. **NPM Tracking:** `npm-add` behaves exactly like OS wrappers. Running `npm-add express` will install it globally but *will not track it*. You must pass `--npm` to track it (e.g., `npm-add express --npm`).
+---
+
+### 5. Configuration Commands
+These commands manage OmniSetup's internal settings, specifically how it handles automatic version control.
+
+| Command | Action |
+| :--- | :--- |
+| `setup-config` | Initializes `~/.setup-config` if it doesn't exist, and displays your current variables. |
+| `setup-push-off` | Disables automatic Git pushing to the remote repository (`AUTO_PUSH=false`). |
+| `setup-push-on` | Re-enables automatic Git pushing (`AUTO_PUSH=true`). |
+
+### 🛡️ A Note on Idempotency
+OmniSetup is designed to be fully **idempotent**. You can safely run `bootstrap.sh` or any wrapper command dozens of times—it will intelligently check current system state, skip existing installations, and will never duplicate entries in your tracked text files or shell profiles (`.zshrc` / `.bashrc`).
 
 ---
 
@@ -182,15 +201,9 @@ setup-config    # Initializes the default config file
 setup-push-off  # Disables the auto-push behavior
 ```
 
-### Configuration Commands
-
-| Command | Action |
-| :--- | :--- |
-| `setup-config` | Displays your current configuration variables (and initializes `~/.setup-config` if it doesn't exist yet). |
-| `setup-push-off` | Disables automatic Git pushing to the remote repository (`AUTO_PUSH=false`). |
-| `setup-push-on` | Re-enables automatic Git pushing (`AUTO_PUSH=true`). |
-
 *(Tip: You can always override your global auto-push setting for a single command by passing the `--no-push` flag, e.g., `brew-add nmap --common --no-push`).*
+
+---
 
 ## 🔧 Troubleshooting & Edge Cases
 - Repo Moved: If you move the cloned repository to a new directory, your global symlinks will break. 

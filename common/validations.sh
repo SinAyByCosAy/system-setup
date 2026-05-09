@@ -32,8 +32,9 @@ validate_flags() {
         return 1
     fi
     
-    if $has_common && $has_linux_name; then
-        echo "[ERROR] --common cannont be combined with --linux-name"
+    # A tool is either Common, Local, OR Divergent (Linux-Name). You cannot mix them.
+    if [ "$has_linux_name" = true ] && ([ "$has_common" = true ] || [ "$has_local" = true ]); then
+        echo "[ERROR] --linux-name acts as its own cross-OS tracking flag. Do not combine it with --common or --local."
         return 1
     fi
 

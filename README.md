@@ -1,4 +1,4 @@
-# 🧰 OmniSetup: System Bootstrapper
+# 🧰 OmniSetup: Declarative System Bootstrapper
 
 OmniSetup is a lightweight, cross-platform (macOS and Linux) utility designed to bootstrap fresh machines and automatically track your installed tools in version-controlled text files. 
 
@@ -36,11 +36,6 @@ source ~/.zshrc
     <li>Linux Only: <a href="https://github.com/SinAyByCosAy/OmniSetup/blob/master/linux/linux-packages.txt">linux-packages.txt</a></li>
 </ul>
 
-This is a <b>Declarative System Bootstrapper</b> where: you describe the desired environment state
-and the tool figures out how to make the machine match it.
-<br>
-Instead of manually commanding: install this -> configure this -> add to PATH <br>
-You declare: "These are the tools and configurations my environment should contain." and the bootstrapper reconstructs it. <br>
 <b>Source of truth: Tracked files</b>
 
 ## ⚡ Daily Usage: Installing & Tracking

@@ -39,14 +39,13 @@ apt-add() {
     add-tool "$tool" "$@"
 }
 npm-add() {
-    echo "$SCRIPT_DIR/validations.sh"
     local tool="$1"
     shift
 
     validate_flags "$@" || return 1
 
-    npm install -g "$tool" || return 1
-    add-tool "$tool" --npm
+    npm list -g "$tool" &>/dev/null || npm install -g "$tool"
+    add-tool "$tool" "$@"
 }
 tool-rm() {
     remove-tool "$@"

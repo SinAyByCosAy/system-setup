@@ -40,9 +40,9 @@ source ~/.zshrc
 
 ## ⚡ Daily Usage: Installing & Tracking
 
-Because OmniSetup uses global symlinks and dynamic path resolution, **you can run these commands from anywhere on your system.** You do not need to be inside the `~/OmniSetup` directory to install or track packages.
-
 OmniSetup operates on a philosophy of explicit intent. You use wrapper commands to install tools, and pass flags to declare how they should be tracked.
+
+Because OmniSetup uses global symlinks and dynamic path resolution, **you can run these commands from anywhere on your system.** You do not need to be inside the `~/OmniSetup` directory to install or track packages.
 
 ## 🛠️ Commands & Flags Guide
 

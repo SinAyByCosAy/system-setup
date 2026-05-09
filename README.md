@@ -156,15 +156,23 @@ add-tool tree --common
 
 #### Case G: Uninstalling and Untracking
 The removal tool automatically handles the uninstallation and purges the tool from your tracked state. You can use it universally, or scope it with flags to specify which list it should be removed from.
-```bash
-# Universal Removal: Removes the tool from the system and ALL tracked lists
-tool-rm express
 
-# Scoped Removal: Removes the tool from the system and ONLY the NPM list
+**Universal Removal (Recommended):** If you pass no flags, it will hunt down the tool, remove it from *all* text files, and uninstall it from your system.
+```bash
+tool-rm express
+tool-rm vlc
+```
+
+**Scoped Removal:** If you want to be surgical, you must specify the tracking scope (`--common`, `--local`, or `--npm`). If you are on a Mac and it's a GUI app, you must also pass `--gui` so Homebrew knows to use `--cask`.
+```bash
+# Removes the tool ONLY from the NPM list
 tool-rm typescript --npm
 
-# Scoped Removal: Removes the GUI app and untracks it from the GUI list
-tool-rm vlc --gui
+# Removes the GUI app ONLY from the local Mac list
+tool-rm vlc --local --gui
+
+# Removes the CLI tool ONLY from the common list
+tool-rm jq --common
 ```
 
 ---

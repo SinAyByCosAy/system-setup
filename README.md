@@ -237,4 +237,21 @@ If a tool requires special provisioning, a dedicated script will be placed in an
 
 This architecture mirrors mature orchestration systems (like Terraform Providers or Ansible Modules), ensuring the core engine remains clean while supporting infinitely complex, heterogeneous software installations.
 
+#### Planned Feature: First-Class Snap Support (The `--snap` Flag)
+
+While `apt` is the traditional default for Linux packages, many modern proprietary applications (like Postman, Slack, and Spotify) are now distributed primarily through Canonical's `snap` store. 
+
+To handle this smoothly across operating systems, OmniSetup will introduce `--snap` as a first-class tracking flag alongside `--gui` and `--npm`.
+
+**How it will work:**
+The `--snap` flag will act as a contextual router based on the host OS.
+```bash
+# Example: omni-add postman --common --gui --snap
+
+# On macOS: 
+# The engine reads `--gui`, ignores `--snap`, and runs: brew install --cask postman
+
+# On Linux: 
+# The engine reads `--snap`, ignores `apt`, and runs: sudo snap install postman --classic
+
 ---
